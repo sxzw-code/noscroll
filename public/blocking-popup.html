@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short-Form Content Blocked</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      border-radius: 16px;
+      padding: 3rem;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #d32f2f;
+    }
+
+    .message {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    .app-name {
+      font-weight: bold;
+      color: #d32f2f;
+      font-size: 1.2em;
+    }
+
+    .reminder {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .reminder h2 {
+      font-size: 1.1rem;
+      color: #856404;
+      margin-bottom: 0.5rem;
+    }
+
+    .reminder p {
+      color: #856404;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🚫</div>
+    <h1>Short-Form Content Blocked</h1>
+    <p class="message">
+      We detected that you opened <span class="app-name" id="appName">a short-form app</span>.
+      This content has been blocked to help you stay focused.
+    </p>
+    
+    <div class="reminder">
+      <h2>💡 Reminder</h2>
+      <p>
+        Short-form content like TikTok, Instagram Reels, and YouTube Shorts can be highly addictive 
+        and time-consuming. Taking a break from these platforms can help improve your focus and productivity.
+      </p>
+    </div>
+
+    <button class="button" id="dismissBtn">I Understand</button>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const appName = urlParams.get('appName') || 'a short-form app';
+    
+    document.getElementById('appName').textContent = appName;
+
+    const dismissBtn = document.getElementById('dismissBtn');
+
+    // Handle dismiss button - user must manually close the popup
+    dismissBtn.addEventListener('click', async () => {
+      console.log('Dismiss button clicked for:', appName);
+      
+      // Disable button to prevent double-clicks
+      dismissBtn.disabled = true;
+      dismissBtn.textContent = 'Closing...';
+      
+      // Try to dismiss via IPC
+      if (window.electronAPI && typeof window.electronAPI.dismissBlockingPopup === 'function') {
+        try {
+          console.log('Calling dismissBlockingPopup...');
+          const result = await window.electronAPI.dismissBlockingPopup(appName);
+          console.log('Dismiss result:', result);
+          
+          // If IPC call succeeds but window doesn't close, try direct close
+          setTimeout(() => {
+            if (!document.hidden) {
+              console.log('Window still open, trying direct close');
+              // This shouldn't work due to closable: false, but try anyway
+              window.close();
+            }
+          }, 500);
+        } catch (error) {
+          console.error('Error dismissing popup:', error);
+          // Re-enable button on error
+          dismissBtn.disabled = false;
+          dismissBtn.textContent = 'I Understand';
+        }
+      } else {
+        console.error('electronAPI.dismissBlockingPopup not available');
+        console.log('Available electronAPI:', window.electronAPI);
+        // Re-enable button
+        dismissBtn.disabled = false;
+        dismissBtn.textContent = 'I Understand';
+      }
+    });
+    
+    // Log when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('Blocking popup loaded for:', appName);
+      console.log('electronAPI available:', !!window.electronAPI);
+      if (window.electronAPI) {
+        console.log('dismissBlockingPopup available:', typeof window.electronAPI.dismissBlockingPopup === 'function');
+      }
+    });
+
+    // Prevent window from being closed via keyboard shortcuts or other means
+    // The popup will only close when the user clicks the button
+  </script>
+</body>
+</html>
+
