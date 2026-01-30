@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Short-Form Content Blocked</title>
+  <title>Content Blocked</title>
   <style>
     * {
       margin: 0;
@@ -12,34 +12,30 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-      background: linear-gradient(135deg, #151829 0%, #0a0e27 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+      background: #0f172a;
       background-image: 
-        radial-gradient(at 0% 0%, rgba(239, 68, 68, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(220, 38, 38, 0.15) 0px, transparent 50%);
-      color: #fff;
+        radial-gradient(circle at 20% 50%, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
+      color: #f8fafc;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       padding: 2rem;
-      text-align: center;
     }
 
     .container {
       background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #f1f5f9;
       border-radius: 24px;
-      padding: 3.5rem;
-      max-width: 550px;
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
       animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
     }
 
     @keyframes slideUp {
@@ -53,45 +49,53 @@
       }
     }
 
-    .icon {
-      font-size: 4rem;
-      margin-bottom: 1.5rem;
+    .icon-container {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid rgba(239, 68, 68, 0.4);
+      border-radius: 50%;
       animation: pulse 2s infinite;
+    }
+
+    .icon {
+      font-size: 3rem;
       filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.5));
     }
 
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
       }
       50% {
         transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
       }
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
-      color: #f1f5f9;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #f8fafc;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
 
     .message {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       line-height: 1.7;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       color: #cbd5e1;
     }
 
     .app-name {
       font-weight: 700;
       color: #fbbf24;
-      font-size: 1.25em;
       background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -99,22 +103,20 @@
     }
 
     .reminder {
-      background: rgba(245, 158, 11, 0.15);
-      backdrop-filter: blur(10px);
+      background: rgba(245, 158, 11, 0.1);
       border: 1px solid rgba(245, 158, 11, 0.3);
       border-left: 4px solid #f59e0b;
       padding: 1.5rem;
-      border-radius: 16px;
-      margin-bottom: 2.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
       text-align: left;
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
     }
 
     .reminder h2 {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       color: #fbbf24;
-      margin-bottom: 1rem;
-      font-weight: 700;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -122,22 +124,22 @@
 
     .reminder h2::before {
       content: '💡';
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
 
     .reminder p {
       color: #fcd34d;
-      font-size: 1rem;
-      line-height: 1.7;
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
 
     .button {
       background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
       color: white;
       border: none;
-      padding: 1.25rem 2.5rem;
-      font-size: 1.1rem;
-      border-radius: 14px;
+      padding: 1.125rem 2rem;
+      font-size: 1.05rem;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-weight: 600;
@@ -180,12 +182,13 @@
       cursor: not-allowed;
       transform: none;
     }
-
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="icon">⚠️</div>
+    <div class="icon-container">
+      <div class="icon">⚠️</div>
+    </div>
     <h1>Content Blocked</h1>
     <p class="message">
       We detected that you opened <span class="app-name" id="appName">a short-form app</span>.
@@ -211,22 +214,18 @@
 
     const dismissBtn = document.getElementById('dismissBtn');
 
-    // Handle dismiss button - user must manually close the popup
     dismissBtn.addEventListener('click', async () => {
       console.log('Dismiss button clicked for:', appName);
       
-      // Disable button to prevent double-clicks
       dismissBtn.disabled = true;
       dismissBtn.textContent = 'Closing...';
       
-      // Try to dismiss via IPC
       if (window.electronAPI && typeof window.electronAPI.dismissBlockingPopup === 'function') {
         try {
           console.log('Calling dismissBlockingPopup...');
           const result = await window.electronAPI.dismissBlockingPopup(appName);
           console.log('Dismiss result:', result);
           
-          // If IPC call succeeds but window doesn't close, try direct close
           setTimeout(() => {
             if (!document.hidden) {
               console.log('Window still open, trying direct close');
@@ -235,26 +234,18 @@
           }, 500);
         } catch (error) {
           console.error('Error dismissing popup:', error);
-          // Re-enable button on error
           dismissBtn.disabled = false;
           dismissBtn.textContent = 'I Understand';
         }
       } else {
         console.error('electronAPI.dismissBlockingPopup not available');
-        console.log('Available electronAPI:', window.electronAPI);
-        // Re-enable button
         dismissBtn.disabled = false;
         dismissBtn.textContent = 'I Understand';
       }
     });
     
-    // Log when page loads
     window.addEventListener('DOMContentLoaded', () => {
       console.log('Blocking popup loaded for:', appName);
-      console.log('electronAPI available:', !!window.electronAPI);
-      if (window.electronAPI) {
-        console.log('dismissBlockingPopup available:', typeof window.electronAPI.dismissBlockingPopup === 'function');
-      }
     });
   </script>
 </body>

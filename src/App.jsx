@@ -9,41 +9,30 @@ function App() {
   const [lastDetection, setLastDetection] = useState(null);
 
   useEffect(() => {
-    // Access the exposed Electron API from the preload script
     if (window.electronAPI) {
       setPlatform(window.electronAPI.getPlatform());
       setVersion(window.electronAPI.getVersion());
       
-      // Get initial monitoring status
       window.electronAPI.getMonitoringStatus().then((status) => {
         setIsMonitoring(status.monitoring);
       });
       
-      // Listen for messages from the main process
       window.electronAPI.onMessage((data) => {
         setMessage(`Received: ${data}`);
       });
       
-      // Listen for short-form app detection
       window.electronAPI.onShortFormDetected((data) => {
         setDetectedApps(data.apps);
         setLastDetection(new Date(data.timestamp).toLocaleTimeString());
       });
     }
     
-    // Cleanup listener on unmount
     return () => {
       if (window.electronAPI) {
         window.electronAPI.removeShortFormListener();
       }
     };
   }, []);
-
-  const handleSendMessage = () => {
-    if (window.electronAPI) {
-      window.electronAPI.sendMessage('Hello from React!');
-    }
-  };
 
   const handleStartMonitoring = async () => {
     if (window.electronAPI) {
@@ -73,84 +62,161 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1>Focus Guard</h1>
-          <p>Stay focused by blocking distracting short-form content</p>
+          <div className="header-title">
+            <div className="logo-icon">🛡️</div>
+            <div>
+              <h1>Focus Guard</h1>
+              <p>Protect your productivity</p>
+            </div>
+          </div>
+          <div className={`status-badge ${isMonitoring ? 'active' : 'inactive'}`}>
+            <span className="status-pulse"></span>
+            {isMonitoring ? 'Active' : 'Inactive'}
+          </div>
         </div>
       </header>
       
       <main className="app-main">
-        <div className="info-section">
-          <h2>System Information</h2>
-          <p><strong>Platform:</strong> {platform || 'Loading...'}</p>
-          <p><strong>Electron Version:</strong> {version || 'Loading...'}</p>
-        </div>
-        
-        <div className="monitoring-section">
-          <h2>Short-Form App Blocker</h2>
-          <div className="monitoring-status">
-            <p className={`status-indicator ${isMonitoring ? 'active' : 'inactive'}`}>
-              <span className="status-dot"></span>
-              <strong>Status:</strong> {isMonitoring ? 'Monitoring Active' : 'Monitoring Inactive'}
-            </p>
+        <div className="dashboard-grid">
+          {/* Main Control Card */}
+          <div className="card main-control-card">
+            <div className="card-header">
+              <h2>Monitoring Control</h2>
+              <div className={`status-indicator-large ${isMonitoring ? 'active' : 'inactive'}`}>
+                <div className="status-ring"></div>
+                <div className="status-dot-large"></div>
+              </div>
+            </div>
+            <div className="card-content">
+              <p className="status-text">
+                {isMonitoring 
+                  ? 'System is actively monitoring for distracting content' 
+                  : 'Monitoring is currently disabled'}
+              </p>
+              <div className="control-buttons">
+                {!isMonitoring ? (
+                  <button onClick={handleStartMonitoring} className="btn btn-primary btn-large">
+                    <span className="btn-icon">▶</span>
+                    Start Monitoring
+                  </button>
+                ) : (
+                  <button onClick={handleStopMonitoring} className="btn btn-danger btn-large">
+                    <span className="btn-icon">⏸</span>
+                    Stop Monitoring
+                  </button>
+                )}
+                <button onClick={handleCheckNow} className="btn btn-secondary btn-large">
+                  <span className="btn-icon">🔍</span>
+                  Check Now
+                </button>
+              </div>
+            </div>
           </div>
-          
-          <div className="monitoring-controls">
-            {!isMonitoring ? (
-              <button onClick={handleStartMonitoring} className="action-button start-button">
-                Start Monitoring
-              </button>
-            ) : (
-              <button onClick={handleStopMonitoring} className="action-button stop-button">
-                Stop Monitoring
-              </button>
-            )}
-            <button onClick={handleCheckNow} className="action-button check-button">
-              Check Now
-            </button>
-          </div>
-          
+
+          {/* Detection Alert Card */}
           {detectedApps.length > 0 && (
-            <div className="detection-alert">
-              <h3>Blocked Apps</h3>
-              <ul>
-                {detectedApps.map((app, index) => (
-                  <li key={index}>{app}</li>
-                ))}
-              </ul>
-              {lastDetection && (
-                <p className="detection-time">Last detected: {lastDetection}</p>
-              )}
+            <div className="card alert-card">
+              <div className="card-header">
+                <h2>Recent Blocks</h2>
+                <span className="alert-badge">{detectedApps.length}</span>
+              </div>
+              <div className="card-content">
+                <div className="detected-apps">
+                  {detectedApps.map((app, index) => (
+                    <div key={index} className="app-tag">
+                      {app}
+                    </div>
+                  ))}
+                </div>
+                {lastDetection && (
+                  <p className="detection-time">Last detected: {lastDetection}</p>
+                )}
+              </div>
             </div>
           )}
-          
-          <div className="monitoring-info">
-            <p><strong>Monitored Apps:</strong></p>
-            <ul className="monitored-list">
-              <li>TikTok</li>
-              <li>Instagram</li>
-              <li>Safari (YouTube Shorts, Instagram Reels, TikTok)</li>
-              <li>Chrome (YouTube Shorts, Instagram Reels, TikTok)</li>
-            </ul>
+
+          {/* Monitored Apps Card */}
+          <div className="card apps-card">
+            <div className="card-header">
+              <h2>Protected Apps</h2>
+            </div>
+            <div className="card-content">
+              <div className="apps-grid">
+                <div className="app-item">
+                  <div className="app-icon">📱</div>
+                  <div className="app-info">
+                    <div className="app-name">TikTok</div>
+                    <div className="app-status">Protected</div>
+                  </div>
+                </div>
+                <div className="app-item">
+                  <div className="app-icon">📷</div>
+                  <div className="app-info">
+                    <div className="app-name">Instagram</div>
+                    <div className="app-status">Protected</div>
+                  </div>
+                </div>
+                <div className="app-item">
+                  <div className="app-icon">🌐</div>
+                  <div className="app-info">
+                    <div className="app-name">Safari</div>
+                    <div className="app-status">Short-form tabs</div>
+                  </div>
+                </div>
+                <div className="app-item">
+                  <div className="app-icon">🌐</div>
+                  <div className="app-info">
+                    <div className="app-name">Chrome</div>
+                    <div className="app-status">Short-form tabs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div className="action-section">
-          <h2>IPC Communication</h2>
-          <button onClick={handleSendMessage} className="action-button">
-            Send Message to Main Process
-          </button>
-          {message && <p className="message">{message}</p>}
-        </div>
-        
-        <div className="features-section">
-          <h2>How It Works</h2>
-          <ul>
-            <li>Monitors your system for short-form content apps</li>
-            <li>Automatically blocks TikTok, Instagram, and short-form browser tabs</li>
-            <li>Shows a reminder popup when content is detected</li>
-            <li>Runs continuously in the background</li>
-            <li>Secure and privacy-focused design</li>
-          </ul>
+
+          {/* System Info Card */}
+          <div className="card info-card">
+            <div className="card-header">
+              <h2>System Information</h2>
+            </div>
+            <div className="card-content">
+              <div className="info-row">
+                <span className="info-label">Platform</span>
+                <span className="info-value">{platform || 'Loading...'}</span>
+              </div>
+              <div className="info-row">
+                <span className="info-label">Electron Version</span>
+                <span className="info-value">{version || 'Loading...'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* How It Works Card */}
+          <div className="card features-card">
+            <div className="card-header">
+              <h2>How It Works</h2>
+            </div>
+            <div className="card-content">
+              <div className="features-list">
+                <div className="feature-item">
+                  <div className="feature-icon">🔍</div>
+                  <div className="feature-text">Continuous system monitoring</div>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">🚫</div>
+                  <div className="feature-text">Automatic content blocking</div>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">💡</div>
+                  <div className="feature-text">Reminder notifications</div>
+                </div>
+                <div className="feature-item">
+                  <div className="feature-icon">🔒</div>
+                  <div className="feature-text">Secure & privacy-focused</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
@@ -158,4 +224,3 @@ function App() {
 }
 
 export default App;
-
