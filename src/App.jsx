@@ -72,8 +72,10 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Electron + React App</h1>
-        <p>Welcome to your Electron application with React renderer!</p>
+        <div className="header-content">
+          <h1>Focus Guard</h1>
+          <p>Stay focused by blocking distracting short-form content</p>
+        </div>
       </header>
       
       <main className="app-main">
@@ -109,7 +111,7 @@ function App() {
           
           {detectedApps.length > 0 && (
             <div className="detection-alert">
-              <h3>🚫 Blocked Apps</h3>
+              <h3>Blocked Apps</h3>
               <ul>
                 {detectedApps.map((app, index) => (
                   <li key={index}>{app}</li>
@@ -141,14 +143,13 @@ function App() {
         </div>
         
         <div className="features-section">
-          <h2>Features</h2>
+          <h2>How It Works</h2>
           <ul>
-            <li>✅ Electron main process</li>
-            <li>✅ Preload script with context isolation</li>
-            <li>✅ React renderer process</li>
-            <li>✅ Secure IPC communication</li>
-            <li>✅ Webpack build configuration</li>
-            <li>✅ Short-form app detection & blocking</li>
+            <li>Monitors your system for short-form content apps</li>
+            <li>Automatically blocks TikTok, Instagram, and short-form browser tabs</li>
+            <li>Shows a reminder popup when content is detected</li>
+            <li>Runs continuously in the background</li>
+            <li>Secure and privacy-focused design</li>
           </ul>
         </div>
       </main>
