@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 function App() {
-  const [platform, setPlatform] = useState('');
-  const [version, setVersion] = useState('');
   const [message, setMessage] = useState('');
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [detectedApps, setDetectedApps] = useState([]);
@@ -10,9 +8,6 @@ function App() {
 
   useEffect(() => {
     if (window.electronAPI) {
-      setPlatform(window.electronAPI.getPlatform());
-      setVersion(window.electronAPI.getVersion());
-      
       window.electronAPI.getMonitoringStatus().then((status) => {
         setIsMonitoring(status.monitoring);
       });
@@ -170,23 +165,6 @@ function App() {
                     <div className="app-status">Short-form tabs</div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* System Info Card */}
-          <div className="card info-card">
-            <div className="card-header">
-              <h2>System Information</h2>
-            </div>
-            <div className="card-content">
-              <div className="info-row">
-                <span className="info-label">Platform</span>
-                <span className="info-value">{platform || 'Loading...'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Electron Version</span>
-                <span className="info-value">{version || 'Loading...'}</span>
               </div>
             </div>
           </div>
