@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AIChat from './AIChat';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -194,6 +195,11 @@ function App() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* AI Chat Card */}
+          <div className="card ai-chat-card">
+            <AIChat isMonitoring={isMonitoring} detectedApps={detectedApps} />
           </div>
         </div>
       </main>
