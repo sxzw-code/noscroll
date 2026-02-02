@@ -59,7 +59,7 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <div className="header-title">
-            <div className="logo-icon">🛡️</div>
+            <div className="logo-icon">FG</div>
             <div>
               <h1>Focus Guard</h1>
               <p>Protect your productivity</p>
