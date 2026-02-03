@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AIChat from './AIChat';
 
+// Import app icons
+import tiktokIcon from './assets/images/tiktok.png';
+import instagramIcon from './assets/images/instagram.png';
+import safariIcon from './assets/images/safari.svg';
+import chromeIcon from './assets/images/chrome.png';
+
 function App() {
   const [message, setMessage] = useState('');
   const [isMonitoring, setIsMonitoring] = useState(false);
@@ -59,7 +65,7 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <div className="header-title">
-            <div className="logo-icon">FG</div>
+            <div className="logo-icon">◉</div>
             <div>
               <h1>Focus Guard</h1>
               <p>Protect your productivity</p>
@@ -139,28 +145,52 @@ function App() {
             <div className="card-content">
               <div className="apps-grid">
                 <div className="app-item">
-                  <div className="app-icon">📱</div>
+                  <div className="app-icon">
+                    {tiktokIcon ? (
+                      <img src={tiktokIcon} alt="TikTok" />
+                    ) : (
+                      <span className="app-icon-fallback">📱</span>
+                    )}
+                  </div>
                   <div className="app-info">
                     <div className="app-name">TikTok</div>
                     <div className="app-status">Protected</div>
                   </div>
                 </div>
                 <div className="app-item">
-                  <div className="app-icon">📷</div>
+                  <div className="app-icon">
+                    {instagramIcon ? (
+                      <img src={instagramIcon} alt="Instagram" />
+                    ) : (
+                      <span className="app-icon-fallback">📷</span>
+                    )}
+                  </div>
                   <div className="app-info">
                     <div className="app-name">Instagram</div>
                     <div className="app-status">Protected</div>
                   </div>
                 </div>
                 <div className="app-item">
-                  <div className="app-icon">🌐</div>
+                  <div className="app-icon">
+                    {safariIcon ? (
+                      <img src={safariIcon} alt="Safari" />
+                    ) : (
+                      <span className="app-icon-fallback">🌐</span>
+                    )}
+                  </div>
                   <div className="app-info">
                     <div className="app-name">Safari</div>
                     <div className="app-status">Short-form tabs</div>
                   </div>
                 </div>
                 <div className="app-item">
-                  <div className="app-icon">🌐</div>
+                  <div className="app-icon">
+                    {chromeIcon ? (
+                      <img src={chromeIcon} alt="Chrome" />
+                    ) : (
+                      <span className="app-icon-fallback">🌐</span>
+                    )}
+                  </div>
                   <div className="app-info">
                     <div className="app-name">Chrome</div>
                     <div className="app-status">Short-form tabs</div>
